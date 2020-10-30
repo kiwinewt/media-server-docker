@@ -1,16 +1,16 @@
 version: "2"
 services:
-    bit:
-        image: linuxserver/transmission
+    deluge:
+        image: linuxserver/deluge
         restart: always
         ports:
-                - "9091:9091"
-                - "51413:51413"
-                - "51413:51413/udp"
+                - "8112:8112"
+                - "58846:58846"
+                - "58946:58946"
+                - "58946:58946/udp"
         volumes:
-                - ${USERDIR}/config/transmission:/config
-                - ${USERDIR}/media/downloads:/downloads
-                - ${USERDIR}/media/watch:/watch
+                - /share/appdata/deluge:/config
+                - /share/downloads:/downloads
         environment:
                 - PUID=${PUID}
                 - PGID=${PGID}
@@ -25,9 +25,10 @@ services:
         ports:
                 - "8989:8989"
         volumes:
-                - ${USERDIR}/config/sonarr:/config
-                - ${USERDIR}/media/downloads:/downloads
-                - ${USERDIR}/media/tv:/tv
+                - /share/appdata/sonarr:/config
+                - /share/downloads:/downloads
+                - /share/series/series:/series
+                - /share/series/kids:/serieskids
         environment:
                 - PUID=${PUID}
                 - PGID=${PGID}
@@ -42,9 +43,10 @@ services:
         ports:
                 - "7878:7878"
         volumes:
-                - ${USERDIR}/config/radarr:/config
-                - ${USERDIR}/media/downloads:/downloads
-                - ${USERDIR}/media/movies:/movies
+                - /share/appdata/radarr:/config
+                - /share/downloads:/downloads
+                - /share/movies/movies:/movies
+                - /share/movies/kids:/movieskids
         environment:
                 - PUID=${PUID}
                 - PGID=${PGID}
@@ -56,24 +58,9 @@ services:
         ports:
                 - "9117:9117"
         volumes:
-                - ${USERDIR}/config/jackett:/config
+                - /share/appdata/jackett:/config
         environment:
                 - PUID=${PUID}
                 - PGID=${PGID}
                 - TZ=${TZ}
 
-    emby:
-        image: dperson/emby
-        restart: always
-        ports:
-                - "8096:8096"
-        expose:
-                - "7359/udp"
-                - "1900/udp"
-        volumes:
-                - ${USERDIR}/config/emby:/config
-                - ${USERDIR}/media/movies:/media/movies
-                - ${USERDIR}/media/tv:/media/tv
-        environment:
-                - USERID=${PUID}
-                - GROUPID=${PGID}
